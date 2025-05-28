@@ -1,1 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | SnipURL Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        
+        .user-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background: #f8f9fa;
+            color: var(--primary);
+        }
+        
+        .nav-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        
+        .chart-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .links-table {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #e6f7ee;
+            color: var(--success);
+        }
+        
+        .status-expired {
+            background: #fef0f0;
+            color: var(--danger);
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quick-action-btn {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-btn:hover {
+            background: #f8f9fa;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-link"></i>
+                <span>SnipURL Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" id="logoutBtn">Logout</a>
+                <a href="/premium" class="premium-btn">Upgrade</a>
+            </div>
+        </nav>
+    </header>
 
+    <main class="dashboard">
+        <aside class="sidebar">
+            <div class="user-profile">
+                <div class="avatar" id="userAvatar">JD</div>
+                <h3 id="userName">John Doe</h3>
+                <p id="userEmail">john@example.com</p>
+                <div class="status-badge status-active" id="userPlan">Pro Plan</div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-link"></i> My Links</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="/premium"><i class="fas fa-crown"></i> Upgrade</a></li>
+            </ul>
+        </aside>
+        
+        <div class="main-content">
+            <div class="quick-actions">
+                <button class="quick-action-btn">
+                    <i class="fas fa-plus"></i> New Link
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-upload"></i> Bulk Import
+                </button>
+                <button class="quick-action-btn">
+                    <i class="fas fa-qrcode"></i> QR Codes
+                </button>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Total Links</h3>
+                    <div class="value">47</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Clicks Today</h3>
+                    <div class="value">128</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Clicks</h3>
+                    <div class="value">2,847</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Top Country</h3>
+                    <div class="value">United States</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Clicks Last 30 Days</h3>
+                <canvas id="clicksChart" height="300"></canvas>
+            </div>
+            
+            <div class="links-table">
+                <h3>Recent Links</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Short URL</th>
+                            <th>Original URL</th>
+                            <th>Clicks</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">snipurl.pro/abc123</a></td>
+                            <td class="truncate">https://example.com/very/long/url...</td>
+                            <td>142</td>
+                            <td>2 days ago</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-chart-line"></i></button>
+                                <button class="action-btn"><i class="fas fa-copy"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">snipurl.pro/xyz789</a></td>
+                            <td class="truncate">https://another-example.com/long/path...</td>
+                            <td>87</td>
+                            <td>1 week ago</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-chart-line"></i></button>
+                                <button class="action-btn"><i class="fas fa-copy"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">snipurl.pro/exp456</a></td>
+                            <td class="truncate">https://expired-example.com/old/link...</td>
+                            <td>32</td>
+                            <td>15 days ago</td>
+                            <td><span class="status-badge status-expired">Expired</span></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-chart-line"></i></button>
+                                <button class="action-btn"><i class="fas fa-copy"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Load user data from backend
+        fetch('/api/user')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('userAvatar').textContent = 
+                    data.name.split(' ').map(n => n[0]).join('');
+                document.getElementById('userName').textContent = data.name;
+                document.getElementById('userEmail').textContent = data.email;
+                document.getElementById('userPlan').textContent = 
+                    data.plan === 'premium' ? 'Premium Plan' : 'Free Plan';
+            });
+        
+        // Initialize chart
+        const ctx = document.getElementById('clicksChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => `${i+1} days ago`).reverse(),
+                datasets: [{
+                    label: 'Clicks',
+                    data: Array.from({length: 30}, () => Math.floor(Math.random() * 100)),
+                    borderColor: '#4361ee',
+                    backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Logout handler
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => window.location.href = '/');
+        });
+    </script>
+</body>
+</html>
