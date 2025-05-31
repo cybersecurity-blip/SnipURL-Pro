@@ -68,7 +68,8 @@ def shorten_url():
         db.session.commit()
         
         # Build short URL using Railway's domain
-        short_url = f"{request.host_url}{short_code}"
+        railway_url = os.getenv('RAILWAY_STATIC_URL', request.host_url)
+        short_url = f"{railway_url.rstrip('/')}/{short_code}"
         
         return jsonify({
             "shortUrl": short_url,
@@ -111,6 +112,11 @@ def track_click(short_code):
     return jsonify({
         "status": "success",
         "clicks": link.clicks
+    })
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
     })
 
 if __name__ == '__main__':
