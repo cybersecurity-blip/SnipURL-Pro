@@ -1,7 +1,6 @@
-# requirements.txt
-flask
-flask-sqlalchemy
-flask-cors
-python-dotenv
-psycopg2-binary
-gunicorn
+flask==2.2.5
+flask-sqlalchemy==3.1.1
+flask-cors==4.0.0
+python-dotenv==1.0.0
+psycopg2-binary==2.9.9
+gunicorn==21.2.0
