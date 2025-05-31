@@ -1,7 +1,0 @@
-{
-  "build": {
-    "nixpacks": {
-      "startCmd": "gunicorn app:app"
-    }
-  }
-}
