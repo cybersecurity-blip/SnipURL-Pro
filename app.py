@@ -1,4 +1,3 @@
-# app.py - Flask Backend for URL Shortener
 import os
 import string
 import random
@@ -27,6 +26,10 @@ class ShortLink(db.Model):
     clicks = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     expires_at = db.Column(db.DateTime)
+
+# Initialize database
+with app.app_context():
+    db.create_all()
 
 # Health check endpoint
 @app.route('/')
@@ -109,11 +112,6 @@ def track_click(short_code):
         "status": "success",
         "clicks": link.clicks
     })
-
-# Initialize database
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
